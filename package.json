@@ -1,0 +1,20 @@
+{
+  "name": "tickttr",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "description": "Ticket Bot",
+  "scripts": {
+    "start": " tsc &&  node ./dist/bot.js"
+  },
+  "dependencies": {
+    "@sapphire/framework": "^5.0.10",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5",
+    "prisma": "^5.11.0"
+  },
+  "devDependencies": {
+    "@prisma/client": "^5.11.0",
+    "typescript": "^5.4.3"
+  }
+}
