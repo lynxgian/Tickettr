@@ -13,8 +13,7 @@
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "@/discord-akairo": ["./node-modules/discord-akairo/*"]
+      "@/*": ["./dist/*"],
     }
   },
 

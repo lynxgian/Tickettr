@@ -12,3 +12,43 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Guild {
+  id               Int             @id @default(autoincrement())
+  guildId          String          @unique
+  TicketCategory   TicketCategory?
+  supportChannelId String
+}
+
+model TicketCategory {
+  id         String @id @default(uuid())
+  guildId    String @unique
+  channelId  String @unique
+  categoryId String @unique
+  guild      Guild  @relation(fields: [guildId], references: [guildId])
+}
+
+model User {
+  id      String   @id @default(uuid()) @db.Uuid
+  userId  String   @unique
+  Tickets Ticket[]
+}
+
+model Ticket {
+  id        Int        @id @default(autoincrement())
+  creatorId String     @db.Uuid
+  guildId   String     @unique
+  channelId String
+  isOpen    Boolean    @default(false)
+  messages  Messages[]
+  creator   User       @relation(fields: [creatorId], references: [id])
+}
+
+model Messages {
+  id         Int    @id @default(autoincrement())
+  ticketId   Int
+  ticket     Ticket @relation(fields: [ticketId], references: [id])
+  authorId   String
+  message    String
+  authorIcon String
+}
