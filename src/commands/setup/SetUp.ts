@@ -24,9 +24,7 @@ export class SetUpCommand extends Command {
         const findGuild = await prisma.guild.findFirst({
             where: {
                 guildId: guild.id,
-                TicketCategory: {
-                    guildId: guild.id
-                }
+
             }
         })
         if (findGuild) return interaction.reply({content: "Sever has already been setup", ephemeral: true});
@@ -34,7 +32,6 @@ export class SetUpCommand extends Command {
         const category = await guild.channels.create({
             name: "Tickets",
             type: 4
-
         })
         const supportChannel = await guild.channels.create({
             parent: category.id,
@@ -58,11 +55,15 @@ export class SetUpCommand extends Command {
                     .setLabel("Create Ticket")
                     .setCustomId("create-ticket")
             )
-        await prisma.ticketCategory.create({
+        await prisma.guild.create({
             data: {
                 guildId: guild.id,
-                categoryId: category.id,
-                channelId: supportChannel.id
+                TicketCategory: {
+                    create: {
+                        categoryId: category.id,
+                        channelId: supportChannel.id
+                    }
+                }
             }
         })
         await supportChannel.send({embeds: [embed], components: [row]})

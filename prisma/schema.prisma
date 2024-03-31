@@ -14,10 +14,9 @@ datasource db {
 }
 
 model Guild {
-  id               Int             @id @default(autoincrement())
-  guildId          String          @unique
-  TicketCategory   TicketCategory?
-  supportChannelId String
+  id             Int             @id @default(autoincrement())
+  guildId        String          @unique
+  TicketCategory TicketCategory?
 }
 
 model TicketCategory {
@@ -45,10 +44,11 @@ model Ticket {
 }
 
 model Messages {
-  id         Int    @id @default(autoincrement())
-  ticketId   Int
-  ticket     Ticket @relation(fields: [ticketId], references: [id])
-  authorId   String
-  message    String
-  authorIcon String
+  id             Int    @id @default(autoincrement())
+  ticketId       Int
+  ticket         Ticket @relation(fields: [ticketId], references: [id])
+  authorId       String
+  authorUsername String
+  message        String
+  authorIcon     String
 }
