@@ -1,25 +1,66 @@
-import {ApplicationCommandRegistry, Command, CommandOptionsRunTypeEnum} from "@sapphire/framework";
 import {
-    ActionRow, ActionRowBuilder,
-    ButtonBuilder, ButtonComponent,
-    ChatInputCommandInteraction, ComponentBuilder, Embed, EmbedBuilder, PermissionOverwrites, PermissionsBitField
+    ApplicationCommandRegistry,
+    Args, ChatInputCommandContext,
+    Command,
+    CommandOptionsRunTypeEnum,
+    MessageCommandContext
+} from "@sapphire/framework";
+import {
+    ActionRow,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonComponent,
+    ChatInputCommandInteraction,
+    ComponentBuilder,
+    Embed,
+    EmbedBuilder,
+    Interaction,
+    PermissionOverwrites,
+    PermissionsBitField
 } from "discord.js";
 import {prisma} from "../../bot";
+import {Subcommand} from "@sapphire/plugin-subcommands";
 
-export class SetUpCommand extends Command {
+export class SetUpCommand extends Subcommand {
     public constructor(context: Command.LoaderContext, options: Command.Options ) {
         super(context, {
             ...options,
-            runIn: CommandOptionsRunTypeEnum.GuildText
+            subcommands: [
+                {
+                    name: 'setup-guild',
+                    chatInputRun: 'chatInputAdd'
+                }
+            ]
         });
     }
 
-    public override registerApplicationCommands(registry: ApplicationCommandRegistry) {
+    public override registerApplicationCommands(registry: Subcommand.Registry) {
         registry.registerChatInputCommand(builder => {
             builder.setName("setup").setDescription("Sets Up Guild").setDefaultMemberPermissions(PermissionsBitField.resolve("ManageGuild"))
+                .addSubcommand((command) =>
+                    command
+                        .setName('setup-guild')
+                        .setDescription("Setups the guild")
+                        .addRoleOption((option) =>
+                                option
+                                    .setName('role')
+                                    .setDescription('select the support role of the guild')
+                                    .setRequired(true)
+                                )
+                        .addChannelOption((option) =>
+                                option
+                                    .setName('log-channel')
+                                    .setDescription('select the log channel of the guild')
+                                    .setRequired(true)
+                        )
+                )
         })
     }
-    public async chatInputRun(interaction:ChatInputCommandInteraction) {
+    public async chatInputAdd(interaction:Subcommand.ChatInputCommandInteraction) {
+        const options = interaction.options.data.flatMap(x => x.options)
+        const optionTypes = options.flatMap(x => x.name)
+        const supportRoleId = options.find(x => x.name === 'role').role.id
+        const logChannelId = options.find(x => x.name === 'log-channel').channel.id
         const guild = interaction.guild
         const findGuild = await prisma.guild.findFirst({
             where: {
@@ -27,7 +68,12 @@ export class SetUpCommand extends Command {
 
             }
         })
+
+
+
         if (findGuild) return interaction.reply({content: "Sever has already been setup", ephemeral: true});
+
+        console.log(supportRoleId)
 
         const category = await guild.channels.create({
             name: "Tickets",
@@ -38,8 +84,9 @@ export class SetUpCommand extends Command {
             name: "Ticket",
             permissionOverwrites: [
                 {
-                    id: interaction.guild.roles.everyone.id, allow:  PermissionsBitField.resolve(["ReadMessageHistory"]), deny: PermissionsBitField.resolve(["SendMessages", "AddReactions"])
-                }
+                    id: interaction.guild.roles.everyone.id, allow:  PermissionsBitField.resolve(["ReadMessageHistory"]), deny: PermissionsBitField.resolve(["SendMessages", "AddReactions"]),
+
+                },
             ]
         })
         const embed = new EmbedBuilder()
@@ -58,11 +105,13 @@ export class SetUpCommand extends Command {
         await prisma.guild.create({
             data: {
                 guildId: guild.id,
+                supportRoleId,
+                logChannelId,
                 TicketCategory: {
                     create: {
                         categoryId: category.id,
                         channelId: supportChannel.id
-                    }
+                    },
                 }
             }
         })

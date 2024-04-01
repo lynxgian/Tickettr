@@ -14,13 +14,16 @@ datasource db {
 }
 
 model Guild {
-  id             Int             @id @default(autoincrement())
+  id             String          @id @default(uuid()) @db.Uuid
   guildId        String          @unique
+  supportRoleId  String          @unique
+  logChannelId   String          @unique
   TicketCategory TicketCategory?
+  tickets        Ticket[]
 }
 
 model TicketCategory {
-  id         String @id @default(uuid())
+  id         String @id @unique @default(uuid())
   guildId    String @unique
   channelId  String @unique
   categoryId String @unique
@@ -36,10 +39,11 @@ model User {
 model Ticket {
   id        Int        @id @default(autoincrement())
   creatorId String     @db.Uuid
-  guildId   String     @unique
-  channelId String
+  guildId   String     @db.Uuid
+  channelId String     @unique
   isOpen    Boolean    @default(false)
   messages  Messages[]
+  guild     Guild      @relation(fields: [guildId], references: [id])
   creator   User       @relation(fields: [creatorId], references: [id])
 }
 

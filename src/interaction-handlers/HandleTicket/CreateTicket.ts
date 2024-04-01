@@ -37,7 +37,9 @@ export default class CreateTicketHandler extends InteractionHandler {
         })
         const findOpenTicket = await prisma.ticket.findFirst({
             where: {
-                guildId: interaction.guild.id,
+                guild: {
+                    guildId: interaction.guildId
+                },
                 creator: {
                     userId: interaction.user.id
                 },
@@ -65,7 +67,11 @@ export default class CreateTicketHandler extends InteractionHandler {
                     userId: interaction.user.id,
                     Tickets: {
                         create: {
-                            guildId: interaction.guildId,
+                            guild: {
+                               connect: {
+                                   guildId: interaction.guildId
+                                }
+                            },
                             channelId: ticketChannel.id
                         }
                     }
@@ -74,7 +80,11 @@ export default class CreateTicketHandler extends InteractionHandler {
         } else {
             await prisma.ticket.create({
                 data: {
-                    guildId: interaction.guildId,
+                    guild: {
+                        connect: {
+                            guildId: interaction.guildId
+                        }
+                    },
                     creator: {
                         connect: {
                             userId: interaction.user.id

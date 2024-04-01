@@ -29,7 +29,9 @@ export default class CloseTicketHandler extends InteractionHandler {
         for (const [messageId, message] of messages.entries()) {
             await prisma.ticket.update({
                 where: {
-                    guildId: interaction.guildId,
+                    guild: {
+                        guildId: interaction.guildId
+                    },
                     channelId: interaction.channelId
                 },
                 data: {
