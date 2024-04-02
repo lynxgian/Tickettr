@@ -3,7 +3,7 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonInteraction,
-    EmbedBuilder,
+    EmbedBuilder, PermissionsBitField,
     StringSelectMenuInteraction
 } from "discord.js";
 import {prisma} from "../../bot";
@@ -24,6 +24,7 @@ export default class CreateTicketHandler extends InteractionHandler {
     }
 
     public  async run(interaction: ButtonInteraction | StringSelectMenuInteraction) {
+        const date = new Date();
         const GuildDB = await prisma.ticketCategory.findFirst({
             where: {
                 guild: {
@@ -32,7 +33,12 @@ export default class CreateTicketHandler extends InteractionHandler {
             },
             select: {
                 categoryId: true,
-                channelId: true
+                channelId: true,
+                guild: {
+                    select: {
+                        supportRoleId: true
+                    }
+                }
             }
         })
         const findOpenTicket = await prisma.ticket.findFirst({
@@ -54,7 +60,12 @@ export default class CreateTicketHandler extends InteractionHandler {
         }
         const ticketChannel =  await interaction.guild.channels.create({
             parent: GuildDB.categoryId,
-            name: `${interaction.user.username}-ticket`
+            name: `${interaction.user.username}-ticket`,
+            permissionOverwrites: [
+                {id: interaction.guild.roles.everyone.id, deny: PermissionsBitField.resolve('ViewChannel')},
+                {id: interaction.user.id, allow: PermissionsBitField.resolve(['ViewChannel', 'SendMessages', 'ReadMessageHistory'])},
+                {id: GuildDB.guild.supportRoleId, allow: PermissionsBitField.resolve(['ViewChannel', 'SendMessages', 'ReadMessageHistory'])}
+            ]
         })
         const findUser = await prisma.user.findFirst({
             where: {
@@ -62,17 +73,19 @@ export default class CreateTicketHandler extends InteractionHandler {
             }
         })
         if(!findUser) {
+
             await prisma.user.create({
                 data: {
                     userId: interaction.user.id,
                     Tickets: {
                         create: {
                             guild: {
-                               connect: {
-                                   guildId: interaction.guildId
+                                connect: {
+                                    guildId: interaction.guildId
                                 }
                             },
-                            channelId: ticketChannel.id
+                            channelId: ticketChannel.id,
+                            createdAt: date.toString().slice(0,-3)
                         }
                     }
                 }
@@ -80,6 +93,7 @@ export default class CreateTicketHandler extends InteractionHandler {
         } else {
             await prisma.ticket.create({
                 data: {
+                    createdAt: date.toString().slice(0,-3),
                     guild: {
                         connect: {
                             guildId: interaction.guildId
@@ -90,10 +104,13 @@ export default class CreateTicketHandler extends InteractionHandler {
                             userId: interaction.user.id
                         }
                     },
+                    isOpen: true,
                     channelId: ticketChannel.id
                 }
             })
         }
+
+
         const embed = new EmbedBuilder()
             .setTitle(`${interaction.user.username}'s Ticket`)
             .setThumbnail(interaction.user.avatarURL())

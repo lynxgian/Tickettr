@@ -37,14 +37,16 @@ model User {
 }
 
 model Ticket {
-  id        Int        @id @default(autoincrement())
-  creatorId String     @db.Uuid
-  guildId   String     @db.Uuid
-  channelId String     @unique
-  isOpen    Boolean    @default(false)
-  messages  Messages[]
-  guild     Guild      @relation(fields: [guildId], references: [id])
-  creator   User       @relation(fields: [creatorId], references: [id])
+  id            Int        @id @default(autoincrement())
+  createdAt     String
+  creatorId     String     @db.Uuid
+  guildId       String     @db.Uuid
+  channelId     String     @unique
+  isOpen        Boolean    @default(false)
+  messages      Messages[]
+  guild         Guild      @relation(fields: [guildId], references: [id])
+  creator       User       @relation(fields: [creatorId], references: [id])
+  transcriptUrl String?
 }
 
 model Messages {
@@ -52,6 +54,7 @@ model Messages {
   ticketId       Int
   ticket         Ticket @relation(fields: [ticketId], references: [id])
   authorId       String
+  timestamp      String
   authorUsername String
   message        String
   authorIcon     String

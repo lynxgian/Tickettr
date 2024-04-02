@@ -57,10 +57,8 @@ export class SetUpCommand extends Subcommand {
         })
     }
     public async chatInputAdd(interaction:Subcommand.ChatInputCommandInteraction) {
-        const options = interaction.options.data.flatMap(x => x.options)
-        const optionTypes = options.flatMap(x => x.name)
-        const supportRoleId = options.find(x => x.name === 'role').role.id
-        const logChannelId = options.find(x => x.name === 'log-channel').channel.id
+        const supportRoleId = interaction.options.getRole('role', true).id
+        const logChannelId = interaction.options.getChannel('log-channel', true).id
         const guild = interaction.guild
         const findGuild = await prisma.guild.findFirst({
             where: {
@@ -69,11 +67,11 @@ export class SetUpCommand extends Subcommand {
             }
         })
 
-
+        console.log(logChannelId)
+        console.log(supportRoleId)
 
         if (findGuild) return interaction.reply({content: "Sever has already been setup", ephemeral: true});
 
-        console.log(supportRoleId)
 
         const category = await guild.channels.create({
             name: "Tickets",
