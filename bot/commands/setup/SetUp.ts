@@ -18,7 +18,7 @@ import {
     PermissionOverwrites,
     PermissionsBitField
 } from "discord.js";
-import {prisma} from "../../bot";
+import {prisma} from "../../../src/lib/prisma";
 import {Subcommand} from "@sapphire/plugin-subcommands";
 
 export class SetUpCommand extends Subcommand {
@@ -62,7 +62,7 @@ export class SetUpCommand extends Subcommand {
         const guild = interaction.guild
         const findGuild = await prisma.guild.findFirst({
             where: {
-                guildId: guild.id,
+                guildId: guild!.id,
 
             }
         })
@@ -73,23 +73,23 @@ export class SetUpCommand extends Subcommand {
         if (findGuild) return interaction.reply({content: "Sever has already been setup", ephemeral: true});
 
 
-        const category = await guild.channels.create({
+        const category = await guild!.channels.create({
             name: "Tickets",
             type: 4
         })
-        const supportChannel = await guild.channels.create({
+        const supportChannel = await guild!.channels.create({
             parent: category.id,
             name: "Ticket",
             permissionOverwrites: [
                 {
-                    id: interaction.guild.roles.everyone.id, allow:  PermissionsBitField.resolve(["ReadMessageHistory"]), deny: PermissionsBitField.resolve(["SendMessages", "AddReactions"]),
+                    id: interaction.guild!.roles.everyone.id, allow:  PermissionsBitField.resolve(["ReadMessageHistory"]), deny: PermissionsBitField.resolve(["SendMessages", "AddReactions"]),
 
                 },
             ]
         })
         const embed = new EmbedBuilder()
             .setTitle("Create a New Ticket")
-            .setImage(guild.iconURL())
+            .setImage(guild!.iconURL())
             .setDescription("Click the button below to create a new ticket")
             .setTimestamp()
         const row = new ActionRowBuilder<ButtonBuilder>()
@@ -102,7 +102,7 @@ export class SetUpCommand extends Subcommand {
             )
         await prisma.guild.create({
             data: {
-                guildId: guild.id,
+                guildId: guild!.id,
                 supportRoleId,
                 logChannelId,
                 TicketCategory: {

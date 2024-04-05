@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "lib": ["es2020"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es2022",
+    "outDir": "../dist",
+    "rootDir": "../",
+    "removeComments": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "@/*": ["../dist/*"],
+    }
+  },
+  "include": [
+    "../src/lib/prisma.ts",
+  ],
+  "exclude": [
+    "../node_modules"
+  ]
+}

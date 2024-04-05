@@ -2,10 +2,9 @@ import {InteractionHandler, InteractionHandlerTypes} from "@sapphire/framework";
 import {
     ButtonInteraction, time,
     EmbedBuilder,
-    StringSelectMenuInteraction, TextChannel, TimestampStyles, Formatters
+    StringSelectMenuInteraction, TextChannel, TimestampStyles
 } from "discord.js";
-import {prisma} from "../../bot";
-
+import {prisma} from "../../../src/lib/prisma";
 
 export default class CloseTicketHandler extends InteractionHandler {
     public constructor(ctx: InteractionHandler.LoaderContext, options: InteractionHandler.Options) {
@@ -22,7 +21,7 @@ export default class CloseTicketHandler extends InteractionHandler {
     }
 
     public  async run(interaction: ButtonInteraction | StringSelectMenuInteraction) {
-        const messages = await interaction.channel.messages.fetch()
+        const messages = await interaction.channel!.messages.fetch()
         const date = new Date()
         const guildDb = await prisma.guild.findFirst({
             where: {
@@ -32,13 +31,13 @@ export default class CloseTicketHandler extends InteractionHandler {
                 logChannelId: true
             }
         })
-        const logChannel = interaction.guild.channels.cache.get(guildDb.logChannelId) as TextChannel
+        const logChannel = interaction.guild!.channels.cache.get(guildDb!.logChannelId) as TextChannel
         let ticketInfo;
         for (const [messageId, message] of messages.entries()) {
            ticketInfo = await prisma.ticket.update({
                 where: {
                     guild: {
-                        guildId: interaction.guildId
+                        guildId: interaction.guildId!
                     },
                     channelId: interaction.channelId
                 },
@@ -46,10 +45,10 @@ export default class CloseTicketHandler extends InteractionHandler {
                     isOpen: false,
                     messages: {
                         create: {
-                            message: message.content,
+                            message: message.content!,
                             authorIcon: message.author.avatarURL() ? message.author.avatarURL() : 'https://imgs.search.brave.com/cCbOevNU0ZRUFbUTSK0_6dCBE5fDydyj6CwEb3dlb6w/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9sb2dv/ZG93bmxvYWQub3Jn/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDE3/LzExL2Rpc2NvcmQt/bG9nby0wLnBuZw',
-                            authorId: message.author.id,
-                            authorUsername: message.author.username,
+                            authorId: message.author.id!,
+                            authorUsername: message.author.username!,
                             timestamp: date.toString()
                         }
                     }
@@ -65,7 +64,7 @@ export default class CloseTicketHandler extends InteractionHandler {
                }
             })
         }
-        const findMember = await interaction.user.fetch(ticketInfo.creator.userId)
+        const findMember = await interaction.user.fetch(ticketInfo!.creator.userId)
 
         const embed = new EmbedBuilder()
             .setTitle(`Ticket Closed`)

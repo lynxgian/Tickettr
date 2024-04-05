@@ -1,26 +1,50 @@
 {
   "compilerOptions": {
-    "lib": ["es2020"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es2022",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "removeComments": true,
-    "strict": false,
-    "noImplicitAny": false,
-    "esModuleInterop": true,
+    "target": "es2017",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "checkJs": true,
     "skipLibCheck": true,
-    "experimentalDecorators": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "noUncheckedIndexedAccess": true,
     "paths": {
-      "@/*": ["./dist/*"],
-    }
+      "@/bot": [
+        "/dist/bot"
+      ],
+      "@/prisma": [
+        "/src/lib/prisma"
+      ],
+      "@/*": [
+        "./transcript-website/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-
   "include": [
-    "./src"
+    ".eslintrc.cjs",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
-    "./node_modules"
+    "src",
+    "dist",
+    "node_modules"
   ]
 }

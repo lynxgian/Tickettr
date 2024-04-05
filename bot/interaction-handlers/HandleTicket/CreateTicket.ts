@@ -6,8 +6,7 @@ import {
     EmbedBuilder, PermissionsBitField,
     StringSelectMenuInteraction
 } from "discord.js";
-import {prisma} from "../../bot";
-
+import {prisma} from "../../../src/lib/prisma";
 
 export default class CreateTicketHandler extends InteractionHandler {
     public constructor(ctx: InteractionHandler.LoaderContext, options: InteractionHandler.Options) {
@@ -96,7 +95,7 @@ export default class CreateTicketHandler extends InteractionHandler {
                     createdAt: date.toString().slice(0,-3),
                     guild: {
                         connect: {
-                            guildId: interaction.guildId
+                            guildId: interaction.guildId!
                         }
                     },
                     creator: {

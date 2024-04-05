@@ -18,7 +18,7 @@ import {
     PermissionOverwrites,
     PermissionsBitField
 } from "discord.js";
-import {prisma} from "../../bot";
+import {prisma} from "../../../src/lib/prisma";
 import {Subcommand} from "@sapphire/plugin-subcommands";
 
 export class SetUpCommand extends Subcommand {
@@ -80,14 +80,14 @@ export class SetUpCommand extends Subcommand {
     public async updateRole(interaction: Subcommand.ChatInputCommandInteraction) {
       const guildDb = await prisma.guild.findFirst({
             where: {
-                guildId: interaction.guildId
+                guildId: interaction.guildId!
             }
         })
 
         if (!guildDb) return interaction.reply({content: 'This guild has not been set up yet \n Please use /setup to get started!', ephemeral: true})
         await prisma.guild.update({
             where: {
-                guildId: interaction.guildId
+                guildId: interaction.guildId!
             },
             data: {
                 supportRoleId: interaction.options.getRole('support-role', true).id
@@ -98,19 +98,20 @@ export class SetUpCommand extends Subcommand {
 
     public async updateLogChannel(interaction: Subcommand.ChatInputCommandInteraction) {const guildDb = await prisma.guild.findFirst({
         where: {
-            guildId: interaction.guildId
+            guildId: interaction.guildId!
         }
     })
 
         if (!guildDb) return interaction.reply({content: 'This guild has not been set up yet \n Please use /setup to get started!', ephemeral: true})
         await prisma.guild.update({
             where: {
-                guildId: interaction.guildId
+                guildId: interaction.guildId!
             },
             data: {
                 logChannelId: interaction.options.getChannel('log-channel', true).id
             }
         })
+
         return await interaction.reply({content: `Successfully updated the log channel of the guild to: <#${interaction.options.getChannel('log-channel', true).id}>`, ephemeral: true})
     }
 }
