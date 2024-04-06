@@ -1,12 +1,9 @@
 import {Session} from "next-auth";
-import {ReactNode} from "react";
+import React, {ReactNode} from "react";
 import AuthProvider from "../../../providers/authProvider";
-
-export default function UserTranscripts({session, children}: {session: Session, children: ReactNode}) {
+export default function UserTranscripts({children}: {children: ReactNode}) {
 return(
     <section>
-        <AuthProvider session={session}>
             {children}
-        </AuthProvider>
     </section>)
 }
