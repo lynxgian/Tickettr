@@ -1,11 +1,12 @@
 import NextAuth from "next-auth";
 import DiscordProvider, {DiscordProfile} from "next-auth/providers/discord"
 
-const handler = NextAuth({
+ const handler = NextAuth({
     providers: [
         DiscordProvider({
             clientSecret: process.env.DISCORD_CLIENT_SECRET!,
             clientId: process.env.DISCORD_CLIENT_ID!,
+            authorization: "https://discord.com/oauth2/authorize?client_id=1223122315298996266&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fauth%2Fcallback%2Fdiscord&scope=identify+email",
             profile(profile: DiscordProfile) {
                 if (profile.avatar === null) {
                     const defaultAvatarNumber = parseInt(profile.discriminator) % 5;
@@ -26,6 +27,7 @@ const handler = NextAuth({
         })
     ],
     callbacks: {
+
         async jwt({token, account, profile}) {
             if (account) {
                 token.accessToken = account.access_token;
@@ -35,7 +37,7 @@ const handler = NextAuth({
                 token.profile = profile;
             }
 
-            return token
+            return {...token, ...account, ...profile}
         },
         async session({session, token }) {
             // @ts-ignore
@@ -48,8 +50,11 @@ const handler = NextAuth({
             session.discordUser = token.profile;
 
             return session
-        }
-    }
+        },
+
+
+    },
+
 })
 
 export {handler as GET, handler as POST}

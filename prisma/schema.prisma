@@ -37,7 +37,7 @@ model User {
 }
 
 model Ticket {
-  id            Int        @id @default(autoincrement())
+  id            String     @id @default(uuid())
   createdAt     String
   creatorId     String     @db.Uuid
   guildId       String     @db.Uuid
@@ -51,7 +51,7 @@ model Ticket {
 
 model Messages {
   id             Int    @id @default(autoincrement())
-  ticketId       Int
+  ticketId       String
   ticket         Ticket @relation(fields: [ticketId], references: [id])
   authorId       String
   timestamp      String

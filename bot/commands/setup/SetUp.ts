@@ -67,8 +67,7 @@ export class SetUpCommand extends Subcommand {
             }
         })
 
-        console.log(logChannelId)
-        console.log(supportRoleId)
+        console.log(findGuild)
 
         if (findGuild) return interaction.reply({content: "Sever has already been setup", ephemeral: true});
 

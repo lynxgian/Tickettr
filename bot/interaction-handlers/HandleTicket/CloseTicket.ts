@@ -25,12 +25,30 @@ export default class CloseTicketHandler extends InteractionHandler {
         const date = new Date()
         const guildDb = await prisma.guild.findFirst({
             where: {
-                guildId: interaction.guildId
+                guildId: interaction.guildId!
             },
             select: {
                 logChannelId: true
             }
         })
+        const ticketCreatorInfo = await prisma.ticket.findFirst({
+            where: {
+                channelId: interaction.channelId,
+                guild: {
+                    guildId: interaction.guildId
+                },
+                isOpen: true
+            },
+            select: {
+                creator: {
+                    select: {
+                        userId: true
+                    }
+                },
+                id: true
+            }
+        })
+        if (!ticketCreatorInfo) return interaction.reply({content: 'something went wrong', ephemeral: true})
         const logChannel = interaction.guild!.channels.cache.get(guildDb!.logChannelId) as TextChannel
         let ticketInfo;
         for (const [messageId, message] of messages.entries()) {
@@ -51,7 +69,8 @@ export default class CloseTicketHandler extends InteractionHandler {
                             authorUsername: message.author.username!,
                             timestamp: date.toString()
                         }
-                    }
+                    },
+                    transcriptUrl: `https://tickettr.xyz/${ticketCreatorInfo.creator.userId}/${ticketCreatorInfo.id}`
                 },
                select: {
                     creator: {

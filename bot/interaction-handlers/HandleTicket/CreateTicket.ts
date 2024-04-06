@@ -80,6 +80,7 @@ export default class CreateTicketHandler extends InteractionHandler {
                         create: {
                             guild: {
                                 connect: {
+
                                     guildId: interaction.guildId
                                 }
                             },

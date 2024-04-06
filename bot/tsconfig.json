@@ -14,9 +14,13 @@
     "experimentalDecorators": true,
     "paths": {
       "@/*": ["../dist/*"],
+      "@/lib/prisma": [
+        "../dist/src/lib/prisma"
+      ]
     }
   },
   "include": [
+    "../bot",
     "../src/lib/prisma.ts",
   ],
   "exclude": [
