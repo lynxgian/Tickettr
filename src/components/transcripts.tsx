@@ -9,7 +9,10 @@ import {getSession, signOut, useSession} from "next-auth/react";
 
 export function Transcripts({getTicketTranscript}) {
     const {data: session} = useSession()
-  if(getTicketTranscript.length <= 0 ) {
+
+
+
+  if(getTicketTranscript.length <= 0 || (getTicketTranscript.map(x => x.ticket.guild.staff.includes(session.discordUser?.id)))) {
     return (
         <>
           <p>No ticket Found</p>

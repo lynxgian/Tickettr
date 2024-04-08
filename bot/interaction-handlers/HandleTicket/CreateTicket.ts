@@ -85,7 +85,8 @@ export default class CreateTicketHandler extends InteractionHandler {
                                 }
                             },
                             channelId: ticketChannel.id,
-                            createdAt: date.toString().slice(0,-3)
+                            createdAt: date.toString().slice(0,-3),
+                            isOpen: true
                         }
                     },
 
