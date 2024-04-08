@@ -19,6 +19,7 @@ model Guild {
   supportRoleId  String          @unique
   logChannelId   String          @unique
   TicketCategory TicketCategory?
+  staff          String[]
   tickets        Ticket[]
 }
 

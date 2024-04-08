@@ -5,7 +5,7 @@ export default class TickettrClient extends SapphireClient  {
 
     constructor() {
         super({
-            intents: ["MessageContent", "Guilds", "GuildMessages"],
+            intents: ["MessageContent", "Guilds", "GuildMessages", "GuildMembers", "GuildPresences"],
             baseUserDirectory: join(process.cwd(), "dist", "bot")
         });
     }

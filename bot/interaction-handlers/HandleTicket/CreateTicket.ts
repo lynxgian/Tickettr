@@ -76,18 +76,19 @@ export default class CreateTicketHandler extends InteractionHandler {
             await prisma.user.create({
                 data: {
                     userId: interaction.user.id,
+
                     Tickets: {
                         create: {
                             guild: {
                                 connect: {
-
                                     guildId: interaction.guildId
                                 }
                             },
                             channelId: ticketChannel.id,
                             createdAt: date.toString().slice(0,-3)
                         }
-                    }
+                    },
+
                 }
             })
         } else {

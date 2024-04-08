@@ -4,10 +4,11 @@
  */
 "use client"
 import {Button} from "@/components/ui/button";
-import {signOut} from "next-auth/react";
+import {getSession, signOut, useSession} from "next-auth/react";
 
 
 export function Transcripts({getTicketTranscript}) {
+    const {data: session} = useSession()
   if(getTicketTranscript.length <= 0 ) {
     return (
         <>

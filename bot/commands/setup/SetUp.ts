@@ -36,7 +36,7 @@ export class SetUpCommand extends Subcommand {
 
     public override registerApplicationCommands(registry: Subcommand.Registry) {
         registry.registerChatInputCommand(builder => {
-            builder.setName("setup").setDescription("Sets Up Guild").setDefaultMemberPermissions(PermissionsBitField.resolve("ManageGuild"))
+            builder.setName("setup").setDescription("Sets Up Guild")
                 .addSubcommand((command) =>
                     command
                         .setName('setup-guild')
@@ -60,14 +60,15 @@ export class SetUpCommand extends Subcommand {
         const supportRoleId = interaction.options.getRole('role', true).id
         const logChannelId = interaction.options.getChannel('log-channel', true).id
         const guild = interaction.guild
+        console.log(supportRoleId)
         const findGuild = await prisma.guild.findFirst({
             where: {
                 guildId: guild!.id,
 
             }
         })
+        const membersWithRole =  guild.members.cache.filter(x => x.roles.cache.has(supportRoleId))
 
-        console.log(findGuild)
 
         if (findGuild) return interaction.reply({content: "Sever has already been setup", ephemeral: true});
 
@@ -76,6 +77,7 @@ export class SetUpCommand extends Subcommand {
             name: "Tickets",
             type: 4
         })
+
         const supportChannel = await guild!.channels.create({
             parent: category.id,
             name: "Ticket",
@@ -99,7 +101,7 @@ export class SetUpCommand extends Subcommand {
                     .setLabel("Create Ticket")
                     .setCustomId("create-ticket")
             )
-        await prisma.guild.create({
+        const guildDb =await prisma.guild.create({
             data: {
                 guildId: guild!.id,
                 supportRoleId,
@@ -109,9 +111,21 @@ export class SetUpCommand extends Subcommand {
                         categoryId: category.id,
                         channelId: supportChannel.id
                     },
-                }
+                },
+                staff: ['']
             }
         })
+        for (const [memberId, member] of membersWithRole) {
+            await prisma.guild.update({
+                where: {
+                    id: guildDb.id
+                },
+                data: {
+                    staff: [`${member.id}`]
+                }
+            })
+        }
+
         await supportChannel.send({embeds: [embed], components: [row]})
         await interaction.reply({content: "Success", ephemeral: true})
     }

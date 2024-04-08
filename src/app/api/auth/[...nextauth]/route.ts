@@ -36,10 +36,10 @@ import DiscordProvider, {DiscordProfile} from "next-auth/providers/discord"
                 token.profile = profile;
             }
 
-            return {...token, ...account, ...profile}
+            return token
         },
         async session({session, token }) {
-            // @ts-ignore
+            //@ts-ignore
             session.accessToken = token.accessToken;
             // @ts-ignore
             session.refreshToken = token.refreshToken;
