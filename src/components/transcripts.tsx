@@ -12,7 +12,7 @@ export function Transcripts({getTicketTranscript}) {
 
 
 
-  if(getTicketTranscript.length <= 0 || (getTicketTranscript.map(x => x.ticket.guild.staff.includes(session.discordUser?.id)))) {
+  if(getTicketTranscript.length <= 0 || !getTicketTranscript.map(x => x.authorId).includes(session.discordUser?.id)|| !getTicketTranscript.map(x => x.ticket.guild.staff.includes(session.discordUser?.id))) {
     return (
         <>
           <p>No ticket Found</p>
