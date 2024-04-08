@@ -10,7 +10,7 @@ export default class ReadyEvent extends Listener {
         });
     }
     public async run(oldMember: GuildMember, newMember: GuildMember) {
-       /* const guild = await prisma.guild.findFirst({
+       const guild = await prisma.guild.findFirst({
             where: {
                 guildId: oldMember.guild.id
             },
@@ -22,7 +22,6 @@ export default class ReadyEvent extends Listener {
         const oldRoles = oldMember.roles.cache
         const newRoles = newMember.roles.cache
 
-        for (const [roleID,role] of newRoles) {
             if (!oldRoles.has(guild.supportRoleId)) {
                 await prisma.guild.update({
                     where: {
@@ -35,8 +34,7 @@ export default class ReadyEvent extends Listener {
                     }
                 })
             }
-        }
-        for (const [roleID,role] of oldRoles) {
+
             const getAllStaff = await prisma.guild.findFirst({
                 where: {
                     guildId: oldMember.guild.id
@@ -49,9 +47,6 @@ export default class ReadyEvent extends Listener {
                 await prisma.guild.update({
                     where: {
                         guildId: oldMember.guild.id,
-                        staff: {
-                            has: oldMember.guild.id
-                        }
                     },
                     data: {
                         staff: {
@@ -60,10 +55,6 @@ export default class ReadyEvent extends Listener {
                     }
                 })
              }
-        } */
-
-        console.log('hi')
-
     }
 
 }
