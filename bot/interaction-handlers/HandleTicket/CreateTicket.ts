@@ -116,7 +116,6 @@ export default class CreateTicketHandler extends InteractionHandler {
             })
         }
 
-
         const embed = new EmbedBuilder()
             .setTitle(`${interaction.user.username}'s Ticket`)
             .setThumbnail(interaction.user.avatarURL())
@@ -130,7 +129,7 @@ export default class CreateTicketHandler extends InteractionHandler {
                     .setStyle(4)
                     .setEmoji("❌")
             )
-        await ticketChannel.send({content: `<@${interaction.user.id}>, <@${GuildDB.guild.supportRoleId}>`,embeds: [embed], components: [buttons]})
+        await ticketChannel.send({content: `<@${interaction.user.id}>, <@&${GuildDB.guild.supportRoleId}>`,embeds: [embed], components: [buttons]})
 
         await interaction.reply({content: `Successfully created a ticket at <#${ticketChannel.id}>`, ephemeral: true})
     }

@@ -119,7 +119,7 @@ export class SetUpCommand extends Subcommand {
                 permissionOverwrites: [
                     {id: client.user.id, allow: ["SendMessages", "EmbedLinks", "ViewChannel"]}
                 ]
-            })
+            }).catch(async (e) => await interaction.reply({content: 'Error: Bot does not have enough permissions to update the log channel \n Please revise the permissions and try again!', ephemeral: true }))
             await prisma.guild.update({
             where: {
                 guildId: interaction.guildId!

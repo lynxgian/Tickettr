@@ -115,7 +115,7 @@ class CreateTicketHandler extends framework_1.InteractionHandler {
             .setLabel("Close Ticket")
             .setStyle(4)
             .setEmoji("❌"));
-        await ticketChannel.send({ content: `<@${interaction.user.id}>, <@${GuildDB.guild.supportRoleId}>`, embeds: [embed], components: [buttons] });
+        await ticketChannel.send({ content: `<@${interaction.user.id}>, <@&${GuildDB.guild.supportRoleId}>`, embeds: [embed], components: [buttons] });
         await interaction.reply({ content: `Successfully created a ticket at <#${ticketChannel.id}>`, ephemeral: true });
     }
 }
