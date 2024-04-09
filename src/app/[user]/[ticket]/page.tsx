@@ -36,9 +36,9 @@ export default async function UserTranscript({params} : {params: {ticket: string
             id: 'desc'
         }
     })
-    console.log(getTicketTranscript.map(x => x.ticket.guild.staff))
     return (
         <>
+
             <Transcripts getTicketTranscript={getTicketTranscript} />
         </>
     )

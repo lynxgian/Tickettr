@@ -51,7 +51,8 @@ export default class CreateTicketHandler extends InteractionHandler {
                 isOpen: true
             },
             select: {
-                channelId: true
+                channelId: true,
+
             }
         })
         if(findOpenTicket) {
@@ -85,7 +86,7 @@ export default class CreateTicketHandler extends InteractionHandler {
                                 }
                             },
                             channelId: ticketChannel.id,
-                            createdAt: date.toString().slice(0,-3),
+                            createdAt: Math.round(Date.now() / 1000).toString(),
                             isOpen: true
                         }
                     },
@@ -95,7 +96,7 @@ export default class CreateTicketHandler extends InteractionHandler {
         } else {
             await prisma.ticket.create({
                 data: {
-                    createdAt: date.toString().slice(0,-3),
+                    createdAt: Math.round(Date.now() / 1000).toString(),
                     guild: {
                         connect: {
                             guildId: interaction.guildId!
@@ -126,7 +127,7 @@ export default class CreateTicketHandler extends InteractionHandler {
                     .setStyle(4)
                     .setEmoji("❌")
             )
-        await ticketChannel.send({content: `<@${interaction.user.id}>`,embeds: [embed], components: [buttons]})
+        await ticketChannel.send({content: `<@${interaction.user.id}>, <@${GuildDB.guild.supportRoleId}>`,embeds: [embed], components: [buttons]})
 
         await interaction.reply({content: `Successfully created a ticket at <#${ticketChannel.id}>`, ephemeral: true})
     }
