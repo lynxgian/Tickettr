@@ -105,6 +105,9 @@ export class SetUpCommand extends Subcommand {
                     .setLabel("Create Ticket")
                     .setCustomId("create-ticket")
             )
+        const updateLogChannelPermissions = await interaction.guild.channels.cache.get(logChannelId).edit({permissionOverwrites: [
+            {id: client.user.id, allow: ["SendMessages", "EmbedLinks", "ViewChannel"]}
+        ]})
       await prisma.guild.create({
             data: {
                 guildId: guild!.id,
@@ -122,7 +125,6 @@ export class SetUpCommand extends Subcommand {
             }
         })
 
-        console.log(supportChannel)
         await supportChannel.send({embeds: [embed], components: [row]})
         await interaction.reply({content: "Success", ephemeral: true})
     }
