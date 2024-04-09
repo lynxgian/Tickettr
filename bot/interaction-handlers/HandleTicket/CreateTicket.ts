@@ -7,6 +7,7 @@ import {
     StringSelectMenuInteraction
 } from "discord.js";
 import {prisma} from "../../../src/lib/prisma";
+import {client} from "../../bot";
 
 export default class CreateTicketHandler extends InteractionHandler {
     public constructor(ctx: InteractionHandler.LoaderContext, options: InteractionHandler.Options) {
@@ -64,7 +65,9 @@ export default class CreateTicketHandler extends InteractionHandler {
             permissionOverwrites: [
                 {id: interaction.guild.roles.everyone.id, deny: PermissionsBitField.resolve('ViewChannel')},
                 {id: interaction.user.id, allow: PermissionsBitField.resolve(['ViewChannel', 'SendMessages', 'ReadMessageHistory'])},
-                {id: GuildDB.guild.supportRoleId, allow: PermissionsBitField.resolve(['ViewChannel', 'SendMessages', 'ReadMessageHistory'])}
+                {id: GuildDB.guild.supportRoleId, allow: PermissionsBitField.resolve(['ViewChannel', 'SendMessages', 'ReadMessageHistory'])},
+                {id: client.user.id, allow: PermissionsBitField.resolve(['ViewChannel', 'SendMessages', 'ReadMessageHistory', "EmbedLinks", "AddReactions"])}
+
             ]
         })
         const findUser = await prisma.user.findFirst({

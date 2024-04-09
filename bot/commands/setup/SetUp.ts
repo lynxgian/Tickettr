@@ -10,7 +10,7 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonComponent,
-    ChatInputCommandInteraction,
+    ChatInputCommandInteraction, Client,
     ComponentBuilder,
     Embed,
     EmbedBuilder,
@@ -20,6 +20,8 @@ import {
 } from "discord.js";
 import {prisma} from "../../../src/lib/prisma";
 import {Subcommand} from "@sapphire/plugin-subcommands";
+import TickettrClient from "../../lib/Client";
+import {client} from "../../bot";
 
 export class SetUpCommand extends Subcommand {
     public constructor(context: Command.LoaderContext, options: Command.Options ) {
@@ -85,11 +87,14 @@ export class SetUpCommand extends Subcommand {
                     id: interaction.guild!.roles.everyone.id, allow:  PermissionsBitField.resolve(["ReadMessageHistory"]), deny: PermissionsBitField.resolve(["SendMessages", "AddReactions"]),
 
                 },
+                {
+                    id: client.user.id, allow: PermissionsBitField.resolve(["SendMessages", "ViewChannel", "ReadMessageHistory", "UseApplicationCommands", "AddReactions", "UseExternalEmojis", "EmbedLinks"])
+                }
             ]
         })
         const embed = new EmbedBuilder()
             .setTitle("Create a New Ticket")
-            .setImage(guild!.iconURL())
+            .setThumbnail(guild!.iconURL())
             .setDescription("Click the button below to create a new ticket")
             .setTimestamp()
         const row = new ActionRowBuilder<ButtonBuilder>()
@@ -100,7 +105,7 @@ export class SetUpCommand extends Subcommand {
                     .setLabel("Create Ticket")
                     .setCustomId("create-ticket")
             )
-        const guildDb =await prisma.guild.create({
+      await prisma.guild.create({
             data: {
                 guildId: guild!.id,
                 supportRoleId,
@@ -117,7 +122,7 @@ export class SetUpCommand extends Subcommand {
             }
         })
 
-
+        console.log(supportChannel)
         await supportChannel.send({embeds: [embed], components: [row]})
         await interaction.reply({content: "Success", ephemeral: true})
     }
