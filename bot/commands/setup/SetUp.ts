@@ -60,7 +60,6 @@ export class SetUpCommand extends Subcommand {
         const supportRoleId = interaction.options.getRole('role', true).id
         const logChannelId = interaction.options.getChannel('log-channel', true).id
         const guild = interaction.guild
-        console.log(supportRoleId)
         const findGuild = await prisma.guild.findFirst({
             where: {
                 guildId: guild!.id,
@@ -112,19 +111,12 @@ export class SetUpCommand extends Subcommand {
                         channelId: supportChannel.id
                     },
                 },
-                staff: ['']
+                staff: {
+                    set: membersWithRole.map(x => x.user.id)
+                }
             }
         })
-        for (const [memberId, member] of membersWithRole) {
-            await prisma.guild.update({
-                where: {
-                    id: guildDb.id
-                },
-                data: {
-                    staff: [`${member.id}`]
-                }
-            })
-        }
+
 
         await supportChannel.send({embeds: [embed], components: [row]})
         await interaction.reply({content: "Success", ephemeral: true})

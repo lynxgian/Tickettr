@@ -83,16 +83,24 @@ export class SetUpCommand extends Subcommand {
                 guildId: interaction.guildId!
             }
         })
+        const membersWithRole =  interaction.guild.members.cache.filter(x => x.roles.cache.has(interaction.options.getRole('support-role', true).id))
 
         if (!guildDb) return interaction.reply({content: 'This guild has not been set up yet \n Please use /setup to get started!', ephemeral: true})
+        console.log(membersWithRole.map(x => x.user.id))
         await prisma.guild.update({
             where: {
-                guildId: interaction.guildId!
+                guildId: interaction.guildId
             },
             data: {
-                supportRoleId: interaction.options.getRole('support-role', true).id
+                supportRoleId: {
+                    set: interaction.options.getRole('support-role', true).id
+                },
+                staff: {
+                    set: membersWithRole.map(x => x.user.id)
+                }
             }
         })
+
         return await interaction.reply({content: `Successfully updated the support role of the guild to ${interaction.options.getRole('support-role', true)}`, ephemeral: true})
     }
 
