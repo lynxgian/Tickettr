@@ -93,6 +93,7 @@ class CloseTicketHandler extends framework_1.InteractionHandler {
         await interaction.reply({ content: "Closed", ephemeral: true });
         await logChannel.send({ embeds: [embed] });
         await interaction.channel.delete();
+        await findMember.send({ embeds: [embed] }).catch(() => null);
     }
 }
 exports.default = CloseTicketHandler;

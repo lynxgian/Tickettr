@@ -95,9 +95,10 @@ export default class CloseTicketHandler extends InteractionHandler {
                 {name: 'Created At', value: `${time(parseInt(ticketInfo.createdAt), TimestampStyles.LongDate)}`, inline: true},
                 {name: 'Closed By', value: `${interaction.user}`, inline: true}
             ])
-
         await interaction.reply({content: "Closed", ephemeral: true})
         await logChannel.send({embeds: [embed]})
         await interaction.channel.delete()
+        await findMember.send({embeds: [embed]}).catch(() => null)
+
     }
 }
