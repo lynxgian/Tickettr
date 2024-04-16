@@ -29,9 +29,9 @@ export default withAuth(
                }
            }
        })
-       console.log(ticketData.creator.userId.includes(authUser))
-       console.log(ticketData.guild.staff.includes(authUser))
-       if (!ticketData && !ticketData.creator.userId.includes(authUser) && !ticketData.guild.staff.filter(x => authUser)) {
+
+       console.log(!ticketData)
+       if (!ticketData || !ticketData?.creator.userId.startsWith(authUser) && !ticketData?.guild.staff.find(x => x === authUser)) {
            return NextResponse.redirect(new URL('/404', req.url))
        }
        return NextResponse.next()
