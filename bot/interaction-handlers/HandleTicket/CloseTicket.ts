@@ -70,7 +70,7 @@ export default class CloseTicketHandler extends InteractionHandler {
                             timestamp: date.toString()
                         }
                     },
-                    transcriptUrl: `https://tickettr.xyz/${ticketCreatorInfo.creator.userId}/${ticketCreatorInfo.id}`
+                    transcriptUrl: `https://tickettr.xyz/transcripts/${ticketCreatorInfo.creator.userId}/${ticketCreatorInfo.id}`
                 },
                select: {
                     creator: {
