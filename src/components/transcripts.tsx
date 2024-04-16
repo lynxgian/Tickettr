@@ -18,17 +18,7 @@ interface TicketTranscriptInterface {
 }
 
 export function Transcripts({getTicketTranscript}: TicketTranscriptInterface) {
-    const {data: session} =  useSession()
 
-  if(getTicketTranscript.length == 0 || getTicketTranscript.map(x => x.ticket.guild.staff.includes(session.discordUser?.id)).length <= 0 || !getTicketTranscript.find(x => x.authorId === session.discordUser?.id) ) {
-    return (
-        <>
-          <p>No ticket Found</p>
-          <Button onClick={() => signOut()}>Sign Out</Button>
-        </>
-
-    )
-  }
   return (
     <div className="w-full px-4 md:px-6 xl:px-8">
       <div className="max-w-5xl mx-auto space-y-8">

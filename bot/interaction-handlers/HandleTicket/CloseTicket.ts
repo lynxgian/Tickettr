@@ -5,7 +5,16 @@ import {
     StringSelectMenuInteraction, TextChannel, TimestampStyles
 } from "discord.js";
 import {prisma} from "../../../src/lib/prisma";
+import {Prisma} from "@prisma/client";
+import {PrismaClientOptions} from "@prisma/client/runtime/library";
 
+interface TicketType {
+    createdAt: string;
+    transcriptUrl: string;
+    creator: {
+        userId: string;
+    };
+}
 export default class CloseTicketHandler extends InteractionHandler {
     public constructor(ctx: InteractionHandler.LoaderContext, options: InteractionHandler.Options) {
         super(ctx, {
@@ -50,7 +59,7 @@ export default class CloseTicketHandler extends InteractionHandler {
         })
         if (!ticketCreatorInfo) return interaction.reply({content: 'something went wrong', ephemeral: true})
         const logChannel = interaction.guild!.channels.cache.get(guildDb!.logChannelId) as TextChannel
-        let ticketInfo;
+        let ticketInfo: TicketType;
         for (const [messageId, message] of messages.entries()) {
            ticketInfo = await prisma.ticket.update({
                 where: {
@@ -83,7 +92,7 @@ export default class CloseTicketHandler extends InteractionHandler {
                }
             })
         }
-        const findMember = await interaction.user.fetch(ticketInfo!.creator.userId)
+        const findMember =  interaction.user
 
         const embed = new EmbedBuilder()
             .setTitle(`Ticket Closed`)
