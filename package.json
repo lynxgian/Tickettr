@@ -5,7 +5,7 @@
   "license": "MIT",
   "description": "Ticket Bot",
   "scripts": {
-    "start-bot": " tsc -p ./bot &&  node ./dist/bot/bot.js",
+    "start-bot": "npx prisma generate --no-engine && tsc -p ./bot &&  node ./dist/bot/bot.js",
     "dev": "next dev",
     "start-website": "next start",
     "build": "next build"
