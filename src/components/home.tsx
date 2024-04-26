@@ -24,6 +24,8 @@ To read more about using these font, please visit the Next.js documentation:
 - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 **/
 import Link from "next/link"
+import { FaGithub } from "react-icons/fa";
+import {Button} from "@/components/ui/button";
 
 export function  HomePage() {
   return (
@@ -41,17 +43,26 @@ export function  HomePage() {
           >
             Add to Server
           </Link>
+          <Link
+              className="ml-2 inline-flex h-10 items-center justify-center rounded-md border border-gray-200 bg-white px-8 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300 dark:border-gray-800"
+              href="https://discord.gg/dyMKBTBPMB"
+          >
+            Join Discord
+          </Link>
         </div>
         <img
           alt="Image"
           className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center"
           height="500"
-          src="/logo.png"
+          src="/transparant-logo.png"
           width="500"
         />
       </div>
       <footer className="flex items-center justify-center py-6 px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">© 2024 Tickettr. All rights reserved.</p>
+        <Link className={"pr-2"} href={'https://github.com/lynxgian/Tickettr'}><FaGithub /></Link>
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          © 2024 Tickettr. All rights reserved.
+        </p>
       </footer>
     </section>
   )

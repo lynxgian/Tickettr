@@ -27,6 +27,7 @@ To read more about using these font, please visit the Next.js documentation:
 import { Button } from "@/components/ui/button"
 import {getSession, signOut, useSession} from "next-auth/react";
 import {redirect, useRouter} from "next/navigation";
+import React from "react";
 
 export function Page404() {
     const {data: session} = useSession()
@@ -46,7 +47,7 @@ export function Page404() {
         <p className="text-gray-500 dark:text-gray-400">Sorry, we couldn't find the page you're looking for.</p>
       </div>
         {
-            session ? <Button className="mx-auto w-[200px]" onClick={() => logout()}>Logout</Button> : ''
+            session ? <Button className="mx-auto w-[200px]" onClick={() => logout()}>Logout</Button> : <Button onClick={() => router.push('/')}>Return Home</Button>
         }
 
     </div>

@@ -5,7 +5,7 @@
   "license": "MIT",
   "description": "Ticket Bot",
   "scripts": {
-    "start-bot": "npx prisma generate --no-engine && tsc -p ./bot &&  node ./dist/bot/bot.js",
+    "start-bot": " tsc -p ./bot &&  node ./dist/bot/bot.js",
     "dev": "next dev",
     "start-website": "next start",
     "build": "next build"
@@ -29,6 +29,7 @@
     "prisma": "^5.12.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-icons": "^5.1.0",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7"
   },

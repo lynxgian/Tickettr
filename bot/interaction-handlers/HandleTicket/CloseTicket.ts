@@ -2,11 +2,11 @@ import {InteractionHandler, InteractionHandlerTypes} from "@sapphire/framework";
 import {
     ButtonInteraction, time,
     EmbedBuilder,
-    StringSelectMenuInteraction, TextChannel, TimestampStyles
+    StringSelectMenuInteraction, TextChannel, TimestampStyles, MessageMentions
 } from "discord.js";
 import {prisma} from "../../../src/lib/prisma";
-import {Prisma} from "@prisma/client";
-import {PrismaClientOptions} from "@prisma/client/runtime/library";
+import {Regex} from "lucide-react";
+import {client} from "../../bot";
 
 interface TicketType {
     createdAt: string;
@@ -61,7 +61,41 @@ export default class CloseTicketHandler extends InteractionHandler {
         const logChannel = interaction.guild!.channels.cache.get(guildDb!.logChannelId) as TextChannel
         let ticketInfo: TicketType;
         for (const [messageId, message] of messages.entries()) {
-           ticketInfo = await prisma.ticket.update({
+            let names: string = message.content;
+            if (message.mentions.users.size > 0) {
+                    const m = message.mentions.users
+
+                    for (const [userId, user] of m) {
+                        let id = userId
+                        names = names.replace(new RegExp(id, 'g'), message.mentions.users.get(id).username)
+                        if (message.mentions.client) {
+                            names = names.replace(new RegExp(client.user.id, 'g'), client.user.username)
+                        }
+                        console.log(names)
+                    }
+
+
+            }
+            if (message.mentions.roles.size > 0){
+                const m = message.mentions.roles
+
+                for (const [roleId, role] of m) {
+                    let id = roleId
+                    names = names.replace(new RegExp(`&${id}`, 'g'), message.mentions.roles.get(id).name)
+
+                }
+            }
+            if (message.mentions.channels.size > 0) {
+                const m = message.mentions.channels
+                for (const [channelId, channel] of m) {
+                    let id = channelId
+                    names = names.replace(new RegExp(`${id}`, 'g'), interaction.guild.channels.cache.get(id)?.name)
+
+                }
+            }
+            message.content = names
+
+            ticketInfo = await prisma.ticket.update({
                 where: {
                     guild: {
                         guildId: interaction.guildId!
@@ -72,7 +106,7 @@ export default class CloseTicketHandler extends InteractionHandler {
                     isOpen: false,
                     messages: {
                         create: {
-                            message: message.content!,
+                            message: message.content,
                             authorIcon: message.author.avatarURL() ? message.author.avatarURL() : 'https://imgs.search.brave.com/cCbOevNU0ZRUFbUTSK0_6dCBE5fDydyj6CwEb3dlb6w/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9sb2dv/ZG93bmxvYWQub3Jn/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDE3/LzExL2Rpc2NvcmQt/bG9nby0wLnBuZw',
                             authorId: message.author.id!,
                             authorUsername: message.author.username!,
@@ -91,6 +125,8 @@ export default class CloseTicketHandler extends InteractionHandler {
                    createdAt: true
                }
             })
+
+
         }
         const findMember =  interaction.user
 
@@ -109,5 +145,5 @@ export default class CloseTicketHandler extends InteractionHandler {
         await interaction.channel.delete()
         await findMember.send({embeds: [embed]}).catch(() => null)
 
-    }
+        }
 }
