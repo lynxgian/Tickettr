@@ -36,7 +36,8 @@ export default class CreateTicketHandler extends InteractionHandler {
                 channelId: true,
                 guild: {
                     select: {
-                        supportRoleId: true
+                        supportRoleId: true,
+                        logChannelId: true
                     }
                 }
             }
@@ -56,6 +57,11 @@ export default class CreateTicketHandler extends InteractionHandler {
 
             }
         })
+        const findRole = await interaction.guild.roles.fetch(GuildDB.guild.supportRoleId)
+        const findChannel = await interaction.guild.channels.fetch(GuildDB.guild.logChannelId)
+
+        if (!findRole) return interaction.reply({content: 'Unable to find support role please run: \n `/update-settings support-role`'})
+        if (!findChannel) return interaction.reply({content: 'Unable to find log channel please run: \n `/update-settings log-channel`'})
         if(findOpenTicket) {
             return interaction.reply({ephemeral: true, content: `You already have an open ticket <#${findOpenTicket.channelId}>`})
         }

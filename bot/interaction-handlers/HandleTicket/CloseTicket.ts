@@ -141,6 +141,7 @@ export default class CloseTicketHandler extends InteractionHandler {
                 {name: 'Closed By', value: `${interaction.user}`, inline: true}
             ])
         await interaction.reply({content: "Closed", ephemeral: true})
+        if (!logChannel) return interaction.reply({content: 'unable to find log channel update it with the following command \n `\`/update-settings log-channel `\`'})
         await logChannel.send({embeds: [embed]})
         await interaction.channel.delete()
         await findMember.send({embeds: [embed]}).catch(() => null)

@@ -41,7 +41,7 @@ export class SetUpCommand extends Subcommand {
             builder.setName("setup").setDescription("Sets Up Guild")
                 .addSubcommand((command) =>
                     command
-                        .setName('setup-guild')
+                        .setName('setup-role')
                         .setDescription("Setups the guild")
                         .addRoleOption((option) =>
                                 option
