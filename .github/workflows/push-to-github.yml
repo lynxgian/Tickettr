@@ -16,4 +16,4 @@ jobs:
           echo "COMMIT_HASH=$(git rev-parse --short HEAD)"
       - name: Push Hash to Environment
         run: |
-            ./update-env.sh ${{ $COMMIT_HASH }}
+            ./update-env.sh
