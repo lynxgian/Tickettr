@@ -13,8 +13,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Get Short Hash
         run: |
-            COMMIT_HASH=${git rev-parse --short HEAD}
-            echo "::set-output name=commit_hash::$COMMIT_HASH"
+          echo "COMMIT_HASH=$(git rev-parse --short HEAD)"
       - name: Push Hash to Environment
         run: |
-            ./update-env.sh ${{ steps.fetch_commit.outputs.commit_hash }}
+            ./update-env.sh ${{ $COMMIT_HASH }}
