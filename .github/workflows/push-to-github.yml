@@ -17,4 +17,4 @@ jobs:
             echo "::set-output name=commit_hash::$COMMIT_HASH"
       - name: Push Hash to Environment
         run: |
-            ./push-hash-to-environment.sh ${{ steps.fetch_commit.outputs.commit_hash }}
+            ./update-env.sh ${{ steps.fetch_commit.outputs.commit_hash }}
