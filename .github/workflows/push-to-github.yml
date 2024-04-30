@@ -19,5 +19,4 @@ jobs:
       - name: Push Hash to Environment
         run: |
           COMMIT_HASH=$(git rev-parse --short HEAD)
-          echo "COMMIT_HASH=$COMMIT_HASH" > .env
-          cat .env
+          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
