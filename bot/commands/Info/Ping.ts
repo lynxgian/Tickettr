@@ -6,14 +6,13 @@ export class PingCommand extends Command {
         super(context, {
             ...options,
 
-            requiredUserPermissions: ["ManageGuild"],
             runIn: CommandOptionsRunTypeEnum.GuildText
         });
     }
 
     public override registerApplicationCommands(registry: ApplicationCommandRegistry) {
         registry.registerChatInputCommand(builder => {
-            builder.setName("ping").setDescription("Ping Command!").setDefaultMemberPermissions(PermissionsBitField.resolve("ManageGuild"))
+            builder.setName("ping").setDescription("Ping Command!")
         })
     }
 
