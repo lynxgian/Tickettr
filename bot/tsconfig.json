@@ -22,6 +22,7 @@
   "include": [
     "../bot",
     "../src/lib/prisma.ts",
+    "../.github/*"
   ],
   "exclude": [
     "../node_modules"
