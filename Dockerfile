@@ -1,8 +1,7 @@
 FROM node:latest
 
-WORKDIR /
+WORKDIR /app
 
-COPY package*.json ./
 
 COPY . .
 COPY .env.example .env
