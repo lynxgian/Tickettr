@@ -6,6 +6,5 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: 'Tickettr'
-    volumes:
-      - .:/app
+
 
