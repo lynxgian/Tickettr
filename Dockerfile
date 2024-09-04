@@ -1,9 +1,10 @@
 FROM node:latest
 
+RUN mkdir -p /app
 WORKDIR /app
 
 
-COPY . .
+COPY . ./app
 COPY .env.example .env
 
 
