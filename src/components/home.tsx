@@ -60,7 +60,11 @@ export function  HomePage() {
       </div>
       <footer className="flex items-center justify-center py-6 px-4 md:px-6 border-t">
         <Link className={"pr-2"} href={'https://github.com/lynxgian/Tickettr'}><FaGithub /></Link>
+
+
         <p className="text-xs text-gray-500 dark:text-gray-400">
+          <Link href={'/privacy'}>Privacy </Link>
+          <Link href={'/tos'}>Terms</Link>
           © 2024 Tickettr. All rights reserved.
         </p>
       </footer>
