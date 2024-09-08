@@ -4,7 +4,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 
-COPY . ./app
+COPY . /app
 COPY .env.example .env
 
 
