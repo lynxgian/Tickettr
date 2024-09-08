@@ -16,12 +16,13 @@ import {
     EmbedBuilder,
     Interaction,
     PermissionOverwrites,
-    PermissionsBitField
+    PermissionsBitField, TextChannel
 } from "discord.js";
 import {prisma} from "../../../src/lib/prisma";
 import {Subcommand} from "@sapphire/plugin-subcommands";
 import TickettrClient from "../../lib/Client";
 import {client} from "../../bot";
+import {log} from "node:util";
 
 export class SetUpCommand extends Subcommand {
     public constructor(context: Command.LoaderContext, options: Command.Options ) {
@@ -73,7 +74,8 @@ export class SetUpCommand extends Subcommand {
 
         if (findGuild) return interaction.reply({content: "Sever has already been setup", ephemeral: true});
 
-
+        const getLogChannelPermissions = guild.channels.cache.get(logChannelId).permissionsFor(client.user.id).has([PermissionsBitField.resolve('SendMessages'), PermissionsBitField.resolve('ViewChannel'), PermissionsBitField.resolve('EmbedLinks')])
+        if (!getLogChannelPermissions) return await interaction.reply("I don't have the right permissions for the specified log channel")
         const category = await guild!.channels.create({
             name: "Tickets",
             type: 4

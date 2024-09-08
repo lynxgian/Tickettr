@@ -71,7 +71,6 @@ export default class CloseTicketHandler extends InteractionHandler {
                         if (message.mentions.client) {
                             names = names.replace(new RegExp(client.user.id, 'g'), client.user.username)
                         }
-                        console.log(names)
                     }
 
 
